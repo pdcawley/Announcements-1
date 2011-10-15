@@ -190,6 +190,33 @@ subtest "unsubscription by subscriber" => sub {
     is $count, 1;
 };
 
+subtest "subscriptions disappear when a subscriber disappears" => sub {
+    my $button = PushedButton->new;
+
+    my $subscriber = {};
+
+    my $count = 0;
+
+    $button->add_subscription(
+        when => 'PushedButton',
+        do   => sub { $count++ },
+        for => $subscriber,
+    );
+
+    $button->add_subscription(
+        when => 'PushedButton',
+        do => sub { $count++ },
+    );
+
+    $button->push;
+    is $count, 2;
+
+    $count = 0;
+    $subscriber = undef;
+    $button->push;
+    is $count, 1;
+};
+
 
 done_testing;
 

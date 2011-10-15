@@ -49,7 +49,7 @@ sub _subscriptions_for {
 
     my @subs = @_;
     $self->_foreach_subscription(sub {
-        my $for = $_->for;
+        my $for = $_->subscriber;
         push @subs, $_ if $for && $for == $subscriber;
     });
     return @subs;
