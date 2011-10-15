@@ -40,6 +40,23 @@ subtest "Basic unsubscription" => sub {
     is $announcement_count, 1;
 };
 
+subtest "Basic unsubscription" => sub {
+    my $nuke = PushedButton->new;
+    my $announcement_count = 0;
+
+    ok $nuke->add_subscription(
+        when => 'PushedButton',
+        do_once => sub {
+            $announcement_count++;
+        }
+    );
+
+    $nuke->push;
+    $nuke->push;
+
+    is $announcement_count, 1;
+};
+
 subtest "Double subscription is wrong, m'kay?" => sub {
     my $nuke = PushedButton->new;
     my $announcement_count = 0;
