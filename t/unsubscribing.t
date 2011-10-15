@@ -59,7 +59,6 @@ subtest "Double subscription is wrong, m'kay?" => sub {
 };
 
 subtest "One Subscription can subscribe to multiple announcers" => sub {
-    local $TODO = "I think this should probably be allowed, but I'm not sure";
     my $red_button = PushedButton->new;
     my $green_button = PushedButton->new;
 

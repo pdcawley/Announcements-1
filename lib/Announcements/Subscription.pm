@@ -1,6 +1,8 @@
 package Announcements::Subscription;
 use Moose;
 
+use Announcements::Types qw(RegistrySet);
+
 has when => (
     is            => 'ro',
     isa           => 'Str',
@@ -15,11 +17,17 @@ has do => (
 );
 
 has _registry => (
-    is => 'rw',
-    isa => 'Announcements::SubscriptionRegistry',
-    weak_ref => 1,
-    clearer => '_clear_registry',
+    is       => 'rw',
+    isa      => RegistrySet,
+    coerce   => 1,
     init_arg => undef,
+    default  => sub { to_RegistrySet([]) },
+    handles  => {
+        _foreach_registry => 'each',
+        _leave_registry   => 'remove',
+        _join_registry    => 'insert',
+        is_in             => 'member',
+    }
 );
 
 
@@ -48,7 +56,7 @@ sub matches {
 
 sub unsubscribe {
     my $self = shift;
-    $self->_registry->unsubscribe($self);
+    $self->_foreach_registry(sub { $_->unsubscribe($self) });
 }
 
 1;

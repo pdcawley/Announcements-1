@@ -8,6 +8,9 @@ all_from 'lib/Announcements.pm';
 githubmeta;
 
 requires 'Moose';
+requires 'MooseX::Types';
+requires 'MooseX::Types::Moose';
+requires 'Set::Object';
 test_requires 'Test::More' => '0.88';
 
 manifest_skip;
