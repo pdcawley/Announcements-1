@@ -4,7 +4,7 @@ use Announcements::Subscription;
 use Announcements::Types qw(SubscriptionSet);
 
 has _subscriptions => (
-    is      => 'ro',
+    is      => '',
     isa     => SubscriptionSet,
     default => sub { to_SubscriptionSet([]) },
     coerce  => 1,
