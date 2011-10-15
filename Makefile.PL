@@ -12,6 +12,7 @@ requires 'MooseX::Types';
 requires 'MooseX::Types::Moose';
 requires 'Set::Object';
 test_requires 'Test::More' => '0.88';
+test_requires 'Test::Fatal';
 
 manifest_skip;
 auto_manifest;
