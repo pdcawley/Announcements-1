@@ -16,9 +16,12 @@ has do => (
     required => 1,
 );
 
-has for => (
-    is => 'ro',
-    isa => 'Ref',
+has subscriber => (
+    is        => 'ro',
+    isa       => 'Ref',
+    init_arg  => 'for',
+    predicate => 'has_subscriber',
+    weak_ref  => 1
 );
 
 has _registry => (
@@ -51,20 +54,23 @@ sub BUILDARGS {
     return $params;
 }
 
-
-
 sub send {
     my $self         = shift;
     my $announcement = shift;
     my $announcer    = shift;
 
-    return unless $self->matches($announcement, $announcer);
+    if ($self->has_subscriber && !$self->subscriber) {
+        $self->unsubscribe;
+    }
+    else {
+        return unless $self->matches($announcement, $announcer);
 
-    $self->do->(
-        $announcement,
-        $announcer,
-        $self,
-    );
+        $self->do->(
+            $announcement,
+            $announcer,
+            $self,
+        );
+    }
 }
 
 sub matches {
