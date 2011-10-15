@@ -16,6 +16,11 @@ has do => (
     required => 1,
 );
 
+has for => (
+    is => 'ro',
+    isa => 'Ref',
+);
+
 has _registry => (
     is       => 'rw',
     isa      => RegistrySet,
