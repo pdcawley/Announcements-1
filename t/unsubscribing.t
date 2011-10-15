@@ -122,6 +122,49 @@ subtest "One Subscription can subscribe to multiple announcers" => sub {
     is $guilty_party, "NOTHING", "Still nothing";
 };
 
+subtest "Unsubscribing from one announcer at a time" => sub {
+    local $TODO = "Wouldn't it be cool if this worked?";
+    
+    my $red_button = PushedButton->new;
+    my $green_button = PushedButton->new;
+
+    my $guilty_party;
+
+    my $subscription = Announcements::Subscription->new(
+        when => 'PushedButton',
+        do => sub {
+            my($announcement, $announcer, $subscription) = @_;
+            $guilty_party = $announcer;
+            $subscription->unsubscribe_from($announcer);
+        },
+    );
+
+    $red_button->add_subscription($subscription);
+    $green_button->add_subscription($subscription);
+
+    $red_button->push;
+    is $guilty_party, $red_button, "RED";
+
+    $guilty_party = "NOTHING";
+
+    $red_button->push;
+
+    is $guilty_party, "NOTHING", "The Red button only works once!";
+
+    $green_button->push;
+    is $guilty_party, $green_button, "GREEN";
+
+    $guilty_party = "NOTHING";
+
+    $red_button->push;
+    is $guilty_party, "NOTHING", "Nope, Red still doesn't work!";
+
+    $guilty_party = "NOTHING";
+    $green_button->push;
+    is $guilty_party, "NOTHING", "And nor does green. This machine sucks!";
+};
+
+
 done_testing;
 
 
