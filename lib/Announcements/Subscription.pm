@@ -30,6 +30,20 @@ has _registry => (
     }
 );
 
+sub BUILDARGS {
+    my $class = shift;
+    my $params = $class->SUPER::BUILDARGS(@_);
+
+    if (my $oneshot = delete $params->{do_once}) {
+        $params->{do} = sub {
+            $_[2]->unsubscribe;
+            $oneshot->(@_);
+        };
+    }
+    return $params;
+}
+
+
 
 sub send {
     my $self         = shift;
