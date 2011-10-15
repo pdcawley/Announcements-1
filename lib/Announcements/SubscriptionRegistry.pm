@@ -43,11 +43,33 @@ sub announce {
     });
 }
 
+sub _subscriptions_for {
+    my $self = shift;
+    my $subscriber = shift;
+
+    my @subs = @_;
+    $self->_foreach_subscription(sub {
+        my $for = $_->for;
+        push @subs, $_ if $for && $for == $subscriber;
+    });
+    return @subs;
+}
+
+sub _to_subscriptions {
+    my $self = shift;
+    return @_ if blessed $_[0] && $_[0]->isa('Announcements::Subscription');
+    my $subscriber = shift;
+    $self->_subscriptions_for($subscriber);
+}
+
 sub unsubscribe {
     my $self = shift;
-    my $subscription = shift;
-    $self->_delete_subscription( $subscription );
-    $subscription->_leave_registry($self) if blessed $subscription && $subscription->can('_leave_registry');
+    my @subscriptions = $self->_to_subscriptions(shift);
+
+    foreach my $subscription (@subscriptions) {
+        $self->_delete_subscription( $subscription );
+        $subscription->_leave_registry($self);
+    }
 }
 
 1;
