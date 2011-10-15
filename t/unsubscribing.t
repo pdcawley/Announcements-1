@@ -164,7 +164,6 @@ subtest "Unsubscribing from one announcer at a time" => sub {
 };
 
 subtest "unsubscription by subscriber" => sub {
-    local $TODO = "Managing subscriptions in groups";
     my $button = PushedButton->new;
 
     my $subscriber = {};
@@ -185,6 +184,7 @@ subtest "unsubscription by subscriber" => sub {
     $button->push;
     is $count, 2;
 
+    $count = 0;
     $button->unsubscribe($subscriber);
     $button->push;
     is $count, 1;
