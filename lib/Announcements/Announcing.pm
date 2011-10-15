@@ -8,7 +8,7 @@ has _subscription_registry => (
     lazy     => 1,
     required => 1,
     default  => sub { Announcements::SubscriptionRegistry->new },
-    handles  => ['add_subscription'],
+    handles  => [qw(add_subscription unsubscribe)],
 );
 
 sub announce {
