@@ -88,10 +88,18 @@ sub unsubscribe {
 }
 
 sub unsubscribe_from {
-    my $self = shift;
+    my $self     = shift;
     my $registry = to_SubscriptionRegistry shift;
 
     $registry->unsubscribe($self);
+}
+
+sub belongs_to {
+    my $self       = shift;
+    my $subscriber = shift;
+
+    $self->has_subscriber
+        && ($self->subscriber == $subscriber);
 }
 
 1;

@@ -50,8 +50,7 @@ sub _subscriptions_for {
 
     my @subs = @_;
     $self->_foreach_subscription(sub {
-        my $for = $_->subscriber;
-        push @subs, $_ if $for && $for == $subscriber;
+        push @subs, $_ if $_->belongs_to($subscriber);
     });
     return @subs;
 }
