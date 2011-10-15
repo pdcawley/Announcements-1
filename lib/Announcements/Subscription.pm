@@ -35,6 +35,9 @@ sub BUILDARGS {
     my $params = $class->SUPER::BUILDARGS(@_);
 
     if (my $oneshot = delete $params->{do_once}) {
+        die "You can use 'do', or you can use 'do_once'. You cannot use both"
+            if $params->{do};
+
         $params->{do} = sub {
             $_[2]->unsubscribe;
             $oneshot->(@_);
