@@ -47,7 +47,7 @@ sub unsubscribe {
     my $self = shift;
     my $subscription = shift;
     $self->_delete_subscription( $subscription );
-    $subscription->_leave_registry($self);
+    $subscription->_leave_registry($self) if blessed $subscription && $subscription->can('_leave_registry');
 }
 
 1;
