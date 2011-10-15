@@ -1,18 +1,18 @@
 package Announcements::SubscriptionRegistry;
 use Moose;
 use Announcements::Subscription;
+use Announcements::Types qw(SubscriptionSet);
 
 has _subscriptions => (
-    traits  => ['Array'],
     is      => 'ro',
-    isa     => 'ArrayRef[Announcements::Subscription]',
-    default => sub { [] },
+    isa     => SubscriptionSet,
+    default => sub { to_SubscriptionSet([]) },
+    coerce  => 1,
     lazy    => 1,
     handles => {
-        subscriptions          => 'elements',
-        _add_subscription      => 'push',
-        _delete_subscription   => 'delete',
-        _index_of_subscription => 'first_index',
+        _add_subscription      => 'insert',
+        _delete_subscription   => 'remove',
+        _foreach_subscription  => 'each',
     },
 );
 
@@ -24,8 +24,6 @@ sub add_subscription {
     if (!ref($subscription)) {
         $subscription = Announcements::Subscription->new(@_);
     }
-
-    return $subscription if $subscription->is_in($self);
 
     $self->_add_subscription($subscription);
     $subscription->_join_registry($self);
@@ -40,19 +38,15 @@ sub announce {
 
     $announcement = $announcement->as_announcement;
 
-    for my $subscription ($self->subscriptions) {
-        $subscription->send($announcement, $announcer);
-    }
+    $self->_foreach_subscription(sub {
+        $_->send($announcement, $announcer);
+    });
 }
 
 sub unsubscribe {
     my $self = shift;
     my $subscription = shift;
-    $self->_delete_subscription(
-        $self->_index_of_subscription(sub {
-            $_ == $subscription;
-        })
-    );
+    $self->_delete_subscription( $subscription );
     $subscription->_leave_registry($self);
 }
 
