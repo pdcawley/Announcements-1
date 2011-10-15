@@ -162,6 +162,33 @@ subtest "Unsubscribing from one announcer at a time" => sub {
     is $guilty_party, "NOTHING", "And nor does green. This machine sucks!";
 };
 
+subtest "unsubscription by subscriber" => sub {
+    local $TODO = "Managing subscriptions in groups";
+    my $button = PushedButton->new;
+
+    my $subscriber = {};
+
+    my $count = 0;
+
+    $button->add_subscription(
+        when => 'PushedButton',
+        do   => sub { $count++ },
+        for  => $subscriber,
+    );
+
+    $button->add_subscription(
+        when => 'PushedButton',
+        do => sub { $count++ },
+    );
+
+    $button->push;
+    is $count, 2;
+
+    $button->unsubscribe($subscriber);
+    $button->push;
+    is $count, 1;
+};
+
 
 done_testing;
 
