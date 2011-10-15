@@ -1,7 +1,7 @@
 package Announcements::Subscription;
 use Moose;
 
-use Announcements::Types qw(RegistrySet);
+use Announcements::Types qw(RegistrySet to_SubscriptionRegistry);
 
 has when => (
     is            => 'ro',
@@ -73,14 +73,14 @@ sub matches {
 
 sub unsubscribe {
     my $self = shift;
-    $self->_foreach_registry(sub { $_->unsubscribe($self) });
+    $self->_foreach_registry(sub { $self->unsubscribe_from($_) });
 }
 
 sub unsubscribe_from {
     my $self = shift;
-    my $announcer = shift;
+    my $registry = to_SubscriptionRegistry shift;
 
-    $announcer->_subscription_registry->unsubscribe($self);
+    $registry->unsubscribe($self);
 }
 
 1;

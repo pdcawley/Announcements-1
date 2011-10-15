@@ -1,5 +1,5 @@
 package Announcements::Types;
-use MooseX::Types -declare => [qw(SubscriptionSet RegistrySet)];
+use MooseX::Types -declare => [qw(SubscriptionSet RegistrySet SubscriptionRegistry)];
 use MooseX::Types::Moose qw(ArrayRef);
 
 use Set::Object qw(set weak_set);
@@ -15,5 +15,13 @@ coerce SubscriptionSet,
 coerce RegistrySet,
     from ArrayRef,
     via { weak_set @$_ };
+
+class_type SubscriptionRegistry,
+    { class => 'Announcements::SubscriptionRegistry' };
+
+role_type 'Announcements::Announcing';
+coerce SubscriptionRegistry,
+    from 'Announcements::Announcing',
+    via { $_->_subscription_registry };
 
 1;
