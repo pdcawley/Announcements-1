@@ -76,6 +76,13 @@ sub unsubscribe {
     $self->_foreach_registry(sub { $_->unsubscribe($self) });
 }
 
+sub unsubscribe_from {
+    my $self = shift;
+    my $announcer = shift;
+
+    $announcer->_subscription_registry->unsubscribe($self);
+}
+
 1;
 
 __END__

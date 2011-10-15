@@ -124,8 +124,6 @@ subtest "One Subscription can subscribe to multiple announcers" => sub {
 };
 
 subtest "Unsubscribing from one announcer at a time" => sub {
-    local $TODO = "Wouldn't it be cool if this worked?";
-    
     my $red_button = PushedButton->new;
     my $green_button = PushedButton->new;
 
