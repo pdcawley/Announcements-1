@@ -2,6 +2,7 @@ use Test::More;
 use strict;
 use warnings;
 use Announcements::Subscription;
+use Test::Fatal;
 
 {
     package PushedButton;
@@ -40,7 +41,7 @@ subtest "Basic unsubscription" => sub {
     is $announcement_count, 1;
 };
 
-subtest "Basic unsubscription" => sub {
+subtest "do_once" => sub {
     my $nuke = PushedButton->new;
     my $announcement_count = 0;
 
@@ -55,6 +56,20 @@ subtest "Basic unsubscription" => sub {
     $nuke->push;
 
     is $announcement_count, 1;
+};
+
+subtest "Do, or do_once, there is no confusion" => sub {
+    isnt(
+        exception {
+            Announcements::Subscription->new(
+                when => 'PushedButton',
+                do => sub { 'one thing' },
+                do_once => sub { 'or the other' },
+            )
+        },
+        undef,
+        "Two params enter, one param leaves"
+    )
 };
 
 subtest "Double subscription is wrong, m'kay?" => sub {
