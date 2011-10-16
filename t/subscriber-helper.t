@@ -30,9 +30,9 @@ test "Subscribing using the subscriber helper methods sets 'for'" => sub {
     my $button = Button->new;
 
     $self->subscribe(
-        to      => 'PushedButton',
-        sent_by => $button,
-        do      => sub {
+        to   => 'PushedButton',
+        from => $button,
+        do   => sub {
             my($announcement, $announcer, $subscription) = @_;
             is $subscription->subscriber, $self
         },
