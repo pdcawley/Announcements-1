@@ -15,6 +15,9 @@ use warnings;
         $self->announce(PushedButton->new);
     }
 
+    package ButtonWatcher;
+    use Moose;
+    with 'Announcements::Subscribing';
 }
 
 use Test::Routine;
@@ -28,16 +31,21 @@ test "Subscribing using the subscriber helper methods sets 'for'" => sub {
     my $self = shift;
 
     my $button = Button->new;
+    my $count = 0;
 
-    $self->subscribe(
+    my $subscriber = ButtonWatcher->new;
+
+    $subscriber->subscribe(
         to   => 'PushedButton',
         from => $button,
-        do   => sub {
-            my($announcement, $announcer, $subscription) = @_;
-            is $subscription->subscriber, $self
-        },
+        do   => sub { $count++ },
     );
+
     $button->push;
+    is $count, 1;
+    $subscriber = undef;
+    $button->push;
+    is $count, 1;
 };
 
 run_me;
