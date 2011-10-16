@@ -20,7 +20,7 @@ use warnings;
 use Test::Routine;
 use Test::Routine::Util;
 
-use Test::Most qw(!blessed);
+use Test::More;
 
 with 'Announcements::Subscribing';
 
