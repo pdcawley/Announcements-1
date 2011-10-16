@@ -3,7 +3,7 @@ use Moose::Role;
 
 sub subscribe {
     my($self, %params) = @_;
-    $params{sent_by}->add_subscription(
+    $params{from}->add_subscription(
         when => $params{to},
         do   => $params{do},
         for  => $self,
