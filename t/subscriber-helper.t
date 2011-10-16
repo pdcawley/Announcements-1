@@ -1,3 +1,4 @@
+use Test::More;
 use strict;
 use warnings;
 
@@ -20,16 +21,7 @@ use warnings;
     with 'Announcements::Subscribing';
 }
 
-use Test::Routine;
-use Test::Routine::Util;
-
-use Test::More;
-
-with 'Announcements::Subscribing';
-
-test "Subscribing using the subscriber helper methods sets 'for'" => sub {
-    my $self = shift;
-
+subtest "A subscription made through the helper goes away when the subscriber does" => sub {
     my $button = Button->new;
     my $count = 0;
 
@@ -48,5 +40,4 @@ test "Subscribing using the subscriber helper methods sets 'for'" => sub {
     is $count, 1;
 };
 
-run_me;
 done_testing;
